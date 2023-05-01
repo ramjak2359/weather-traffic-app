@@ -8,12 +8,14 @@ import {DatePicker, DatePickerProps, Select, TimePicker} from "antd";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSun} from "@fortawesome/free-regular-svg-icons";
 import {faCarRear} from "@fortawesome/free-solid-svg-icons";
+import {AreaMetadata, Camera, TrafficDTO, WeatherDTO} from "@/types";
+import QueryString from 'query-string';
 
 interface IPageProps {
 }
 
 const Page = (props: IPageProps) => {
-  const [date, setDate] = useState<Date | undefined>(undefined);
+  const [date, setDate] = useState(new Date());
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
     if (date) {
       const timeDate = date.toDate();
@@ -22,7 +24,7 @@ const Page = (props: IPageProps) => {
       const day = timeDate.getDate();
 
       setDate(d => {
-        const currDate = d ? new Date(d.getTime()) : new Date();
+        const currDate = new Date(d.getTime());
         currDate.setFullYear(year);
         currDate.setMonth(month);
         currDate.setDate(day);
@@ -38,7 +40,7 @@ const Page = (props: IPageProps) => {
       const seconds = timeDate.getSeconds();
 
       setDate(d => {
-        const currDate = d ? new Date(d.getTime()) : new Date();
+        const currDate = new Date(d.getTime());
         currDate.setHours(hours);
         currDate.setMinutes(minutes);
         currDate.setSeconds(seconds);
@@ -52,9 +54,35 @@ const Page = (props: IPageProps) => {
     console.log(`Selected: ${value}`);
   };
 
-  useEffect(() => {
+  const [cameras, setCameras] = useState<Camera[]>();
+  const loadTraffic = async (date: Date) => {
+    const TRAFFIC_API_URL = "https://api.data.gov.sg/v1/transport/traffic-images";
+    const dateString = date.toISOString()
+    const query = {
+      date_time: dateString.substring(0, dateString.length - 5)
+    };
+    const queryString = QueryString.stringify(query);
+    const response = await fetch(TRAFFIC_API_URL+'?'+queryString);
+    const jsonData: TrafficDTO = await response.json();
+    setCameras(jsonData.items[0].cameras);
+  }
 
-  });
+  const [locations, setLocations] = useState<AreaMetadata[]>();
+  const loadWeather = async () => {
+    const TRAFFIC_API_URL = "https://api.data.gov.sg/v1/environment/2-hour-weather-forecast";
+    const dateString = date.toISOString()
+    const query = {
+      date_time: dateString.substring(0, dateString.length - 5)
+    };
+    const queryString = QueryString.stringify(query);
+    const response = await fetch(TRAFFIC_API_URL+'?'+queryString);
+    const jsonData: WeatherDTO = await response.json();
+    setLocations(jsonData.area_metadata);
+  }
+
+  useEffect(() => {
+    loadTraffic(date);
+  }, [date]);
 
   return (
     <main className={styles.main}>
@@ -79,63 +107,20 @@ const Page = (props: IPageProps) => {
       </div>
 
       <div className={styles.grid}>
-        <DatePicker onChange={onChange} size="large" />
-        <TimePicker onChange={onTimeChange} size="large" />
-        <Select
-          size="large"
-          onChange={handleChange}
-          options={options}
-          disabled={!!date}
-        />
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        {/*<a*/}
-        {/*  href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"*/}
-        {/*  className={styles.card}*/}
-        {/*  target="_blank"*/}
-        {/*  rel="noopener noreferrer"*/}
-        {/*>*/}
-        {/*  <h2>*/}
-        {/*    Deploy <span>-&gt;</span>*/}
-        {/*  </h2>*/}
-        {/*  <p>*/}
-        {/*    Instantly deploy your Next.js site to a shareable URL with Vercel.*/}
-        {/*  </p>*/}
-        {/*</a>*/}
+        <div>
+          <DatePicker onChange={onChange} size="large" />
+        </div>
+        <div>
+          <TimePicker onChange={onTimeChange} size="large" />
+        </div>
+        <div>
+          <Select
+            size="large"
+            onChange={handleChange}
+            options={options}
+            disabled={!!date}
+          />
+        </div>
       </div>
     </main>
   );
