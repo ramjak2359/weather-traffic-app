@@ -18,19 +18,14 @@
   font-family: var(--font-mono);
 }
 
-.description a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 .icon {
   vertical-align: middle;
   margin-right: 8px;
 }
-
-.input {
+.picker {
+  width: 50%;
+}
+.select {
   width: 100%;
 }
 
@@ -50,42 +45,11 @@
   border-radius: var(--border-radius);
 }
 
-.code {
-  font-weight: 700;
-  font-family: var(--font-mono);
-}
-
 .grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(25%, auto));
   width: var(--max-width);
   max-width: 100%;
-}
-
-.card {
-  padding: 1rem 1.2rem;
-  border-radius: var(--border-radius);
-  background: rgba(var(--card-rgb), 0);
-  border: 1px solid rgba(var(--card-border-rgb), 0);
-  transition: background 200ms, border 200ms;
-}
-
-.card span {
-  display: inline-block;
-  transition: transform 200ms;
-}
-
-.card h2 {
-  font-weight: 600;
-  margin-bottom: 0.7rem;
-}
-
-.card p {
-  margin: 0;
-  opacity: 0.6;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  max-width: 30ch;
 }
 
 .center {
@@ -120,27 +84,6 @@
   transform: translateZ(0);
 }
 
-.logo {
-  position: relative;
-}
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  .card:hover {
-    background: rgba(var(--card-rgb), 0.1);
-    border: 1px solid rgba(var(--card-border-rgb), 0.15);
-  }
-
-  .card:hover span {
-    transform: translateX(4px);
-  }
-}
-
-@media (prefers-reduced-motion) {
-  .card:hover span {
-    transform: none;
-  }
-}
-
 /* Mobile */
 @media (max-width: 700px) {
   .content {
@@ -154,14 +97,6 @@
     text-align: center;
   }
 
-  .card {
-    padding: 1rem 2.5rem;
-  }
-
-  .card h2 {
-    margin-bottom: 0.5rem;
-  }
-
   .center {
     padding: 8rem 0 6rem;
   }
@@ -173,10 +108,6 @@
 
   .description {
     font-size: 0.8rem;
-  }
-
-  .description a {
-    padding: 1rem;
   }
 
   .description p,
@@ -222,24 +153,5 @@
 @media (min-width: 701px) and (max-width: 1120px) {
   .grid {
     grid-template-columns: repeat(2, 50%);
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .vercelLogo {
-    filter: invert(1);
-  }
-
-  .logo {
-    filter: invert(1) drop-shadow(0 0 0.3rem #ffffff70);
-  }
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(360deg);
-  }
-  to {
-    transform: rotate(0deg);
   }
 }

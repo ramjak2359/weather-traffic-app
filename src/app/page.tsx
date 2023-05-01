@@ -15,7 +15,6 @@ import {
 import {AreaMetadata, Camera, Forecast, TrafficDTO, WeatherDTO} from "@/types";
 import QueryString from 'query-string';
 import dayjs from "dayjs";
-import {IconDefinition} from "@ant-design/icons-svg/es/types";
 import {IconProp} from "@fortawesome/fontawesome-svg-core";
 import {faSun} from "@fortawesome/free-regular-svg-icons";
 
@@ -159,12 +158,12 @@ const Page = (props: IPageProps) => {
         </p>
       </div>
 
+      <div className={styles.center} />
+
       <div className={styles.grid}>
         <div>
-          <DatePicker onChange={onChange} className={styles.input} size="large" disabledDate={checkIsDisabled} />
-        </div>
-        <div>
-          <TimePicker onChange={onTimeChange} className={styles.input} size="large" />
+          <DatePicker onChange={onChange} className={styles.picker} size="large" disabledDate={checkIsDisabled} />
+          <TimePicker onChange={onTimeChange} className={styles.picker} size="large" />
         </div>
         <div>
           <Select
@@ -172,7 +171,7 @@ const Page = (props: IPageProps) => {
             onChange={setSelectedLocation}
             options={locationOptions}
             disabled={!date}
-            className={styles.input}
+            className={styles.select}
           />
         </div>
         <div>
