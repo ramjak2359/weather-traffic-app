@@ -1,5 +1,5 @@
 "use client";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import styles from './page.module.scss'
 import {getDay} from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
@@ -48,16 +48,14 @@ const Page = (props: IPageProps) => {
       })
     }
   };
-
-  const [options, setOptions] = useState([]);
   const handleChange = (value: string | string[]) => {
     console.log(`Selected: ${value}`);
   };
 
   const [cameras, setCameras] = useState<Camera[]>();
-  const loadTraffic = async (date: Date) => {
+  const loadTraffic = async (dateParam: Date) => {
     const TRAFFIC_API_URL = "https://api.data.gov.sg/v1/transport/traffic-images";
-    const dateString = date.toISOString()
+    const dateString = dateParam.toISOString()
     const query = {
       date_time: dateString.substring(0, dateString.length - 5)
     };
@@ -68,9 +66,9 @@ const Page = (props: IPageProps) => {
   }
 
   const [locations, setLocations] = useState<AreaMetadata[]>();
-  const loadWeather = async () => {
+  const loadWeatherAndLocation = async (dateParam: Date) => {
     const TRAFFIC_API_URL = "https://api.data.gov.sg/v1/environment/2-hour-weather-forecast";
-    const dateString = date.toISOString()
+    const dateString = dateParam.toISOString()
     const query = {
       date_time: dateString.substring(0, dateString.length - 5)
     };
@@ -82,7 +80,13 @@ const Page = (props: IPageProps) => {
 
   useEffect(() => {
     loadTraffic(date);
+    loadWeatherAndLocation(date);
   }, [date]);
+  console.log(locations);
+
+  const locationOptions = useMemo(() => locations?.map(l => ({
+    value: l.name, display: l.name,
+  })) || [], [locations]);
 
   return (
     <main className={styles.main}>
@@ -108,17 +112,18 @@ const Page = (props: IPageProps) => {
 
       <div className={styles.grid}>
         <div>
-          <DatePicker onChange={onChange} size="large" />
+          <DatePicker onChange={onChange} className={styles.input} size="large" />
         </div>
         <div>
-          <TimePicker onChange={onTimeChange} size="large" />
+          <TimePicker onChange={onTimeChange} className={styles.input} size="large" />
         </div>
         <div>
           <Select
             size="large"
             onChange={handleChange}
-            options={options}
-            disabled={!!date}
+            options={locationOptions}
+            disabled={!date}
+            className={styles.input}
           />
         </div>
       </div>
