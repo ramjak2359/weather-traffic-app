@@ -164,8 +164,6 @@ const Page = (props: IPageProps) => {
         <div>
           <DatePicker onChange={onChange} className={styles.picker} size="large" disabledDate={checkIsDisabled} />
           <TimePicker onChange={onTimeChange} className={styles.picker} size="large" />
-        </div>
-        <div>
           <Select
             size="large"
             onChange={setSelectedLocation}
@@ -174,23 +172,26 @@ const Page = (props: IPageProps) => {
             className={styles.select}
           />
         </div>
-        <div>
-          <Card style={{ width: '100%' }}>
-            {
-              selectedLocationDetail.weather && <>
-                <div><FontAwesomeIcon icon={getWeatherIcon(selectedLocationDetail.weather.forecast)} size="2x"  /></div>
-                <p>{selectedLocationDetail.weather.forecast}</p>
-              </>
-            }
-          </Card>
-        </div>
-        <div>
-          {selectedLocationDetail.cameraData && <Image
-            src={selectedLocationDetail.cameraData?.camera.image}
-            className={styles.trafficImg}
-          />
+        <div />
+        {selectedLocationDetail.cameraData ?
+          <div>
+
+            <Image
+              src={selectedLocationDetail.cameraData?.camera.image}
+              className={styles.trafficImg}
+            />
+          </div>
+          :
+          <Card style={{ width: '100%' }} />
+        }
+        <Card style={{ width: '100%' }}>
+          {
+            selectedLocationDetail.weather && <>
+              <div><FontAwesomeIcon icon={getWeatherIcon(selectedLocationDetail.weather.forecast)} size="3x"  /></div>
+              <p style={{ fontSize: "18px", marginTop: "8px" }}>{selectedLocationDetail.weather.forecast}</p>
+            </>
           }
-        </div>
+        </Card>
       </div>
     </main>
   );
