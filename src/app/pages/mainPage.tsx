@@ -1,10 +1,10 @@
 "use client";
-import {useEffect, useState} from "react";
-import styles from './page.module.scss'
+import {useState} from "react";
+import styles from '../page.module.scss'
 import {getDay} from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
 import Image from 'next/image'
-import {DatePicker, DatePickerProps, Select, TimePicker} from "antd";
+import {DatePicker, DatePickerProps, TimePicker} from "antd";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSun} from "@fortawesome/free-regular-svg-icons";
 import {faCarRear} from "@fortawesome/free-solid-svg-icons";
@@ -12,23 +12,10 @@ import {faCarRear} from "@fortawesome/free-solid-svg-icons";
 interface IPageProps {
 }
 
-const Page = (props: IPageProps) => {
+const MainPage = (props: IPageProps) => {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    if (date) {
-      const timeDate = date.toDate();
-      const year = timeDate.getFullYear();
-      const month = timeDate.getMonth();
-      const day = timeDate.getDate();
-
-      setDate(d => {
-        const currDate = d ? new Date(d.getTime()) : new Date();
-        currDate.setFullYear(year);
-        currDate.setMonth(month);
-        currDate.setDate(day);
-        return currDate;
-      })
-    }
+    setDate(date?.toDate());
   };
   const onTimeChange: DatePickerProps['onChange'] = (date, dateString) => {
     if (date) {
@@ -38,7 +25,7 @@ const Page = (props: IPageProps) => {
       const seconds = timeDate.getSeconds();
 
       setDate(d => {
-        const currDate = d ? new Date(d.getTime()) : new Date();
+        const currDate = d || new Date();
         currDate.setHours(hours);
         currDate.setMinutes(minutes);
         currDate.setSeconds(seconds);
@@ -47,22 +34,13 @@ const Page = (props: IPageProps) => {
     }
   };
 
-  const [options, setOptions] = useState([]);
-  const handleChange = (value: string | string[]) => {
-    console.log(`Selected: ${value}`);
-  };
-
-  useEffect(() => {
-
-  });
-
   return (
     <main className={styles.main}>
       <div className={styles.description}>
         <p>
-          <i className={styles.icon}>
+          <span className={styles.icon}>
             <FontAwesomeIcon icon={faCarRear} size="2x"  />
-          </i>
+          </span>
           Traffic and Weather App
         </p>
       </div>
@@ -80,13 +58,7 @@ const Page = (props: IPageProps) => {
 
       <div className={styles.grid}>
         <DatePicker onChange={onChange} size="large" />
-        <TimePicker onChange={onTimeChange} size="large" />
-        <Select
-          size="large"
-          onChange={handleChange}
-          options={options}
-          disabled={!!date}
-        />
+        <TimePicker onChange={onChange} size="large" />
         <a
           href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
           className={styles.card}
@@ -141,4 +113,4 @@ const Page = (props: IPageProps) => {
   );
 }
 
-export default Page;
+export default MainPage;
