@@ -48,6 +48,7 @@
 .grid {
   display: grid;
   grid-template-columns: 3fr 1fr;
+  grid-gap: 8px;
   width: var(--max-width);
   max-width: 100%;
 }
